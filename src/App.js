@@ -19,7 +19,7 @@ export default function App(props) {
       if (id === task.id) {
         return { ...task, name: newName };
       }
-      else 
+      else
         return task;
     });
     setTasks(editedTaskList);
@@ -43,7 +43,8 @@ export default function App(props) {
     setTasks(updatedTasks);
     console.log(updatedTasks);
   }
-  
+
+
   const taskList = tasks.map((task) => (
     <Todo
       id={task.id}
