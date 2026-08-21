@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 export default function App(props) {
 
   const [tasks, setTasks] = useState(props.tasks);
+  const [filter, setFilter] = useState("ALL");
 
   function addTask(name) {
     const newTask = { id: `todo-${nanoid()}`, name, completed: false };
@@ -32,10 +33,8 @@ export default function App(props) {
 
   function toggleTaskCompleted(id) {
     const updatedTasks = tasks.map((task) => {
-      // if this task has the same ID as the edited task
       if (id === task.id) {
-        // use object spread to make a new object
-        // whose `completed` prop has been inverted
+
         return { ...task, completed: !task.completed };
       }
       return task;
@@ -44,8 +43,24 @@ export default function App(props) {
     console.log(updatedTasks);
   }
 
+  const filter_map = {
+    ALL: () => true,
+    Active: (task) => !task.completed,
+    Completed: (task) => task.completed
+  };
 
-  const taskList = tasks.map((task) => (
+  const filter_names = Object.keys(filter_map);
+
+  const filterList = filter_names.map((name) =>
+  (<Filterbutton
+    name={name}
+    key={name}
+    setFilter={setFilter}
+    isPressed={name === filter}
+     />
+  ));
+
+  const taskList = tasks.filter(filter_map[filter]).map((task) => (
     <Todo
       id={task.id}
       name={task.name}
@@ -65,9 +80,7 @@ export default function App(props) {
       <h1>TodoMatic</h1>
       <Form addTask={addTask} />
       <div className="filters btn-group stack-exception">
-        <Filterbutton filtername="ALL" />
-        <Filterbutton filtername="Active" />
-        <Filterbutton filtername="Competation" />
+        {filterList}
       </div>
       <h2 id="list-heading">{headingText}</h2>
       <ul
